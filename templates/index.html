@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Breed Identifier</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for Anime-themed Dog Breed Identifier */
+        :root {
+            --primary-color: #8a2be2;
+            --secondary-color: #ff6ec7;
+            --accent-color: #00ffff;
+            --dark-bg: #0a0a1a;
+            --darker-bg: #050510;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--darker-bg);
+            color: #fff;
+            min-height: 100vh;
+            padding-top: 76px; /* Account for fixed navbar */
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(10, 10, 26, 0.9) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 0.8rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.7);
+        }
+
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--accent-color) !important;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #ccc;
+        }
+
+        /* Background Animation */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxyYWRpYWxHcmFkaWVudCBpZD0iYSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNTAlIiBmeD0iNTAlIiBmeT0iNTAlIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDAwIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMDAwIi8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNhKSIgaGVpZ2h0PSIxMDAlIiB3aWR0aD0iMTAwJSIvPjwvc3ZnPg=='); 
+            animation: twinkle 200s linear infinite;
+        }
+
+        .twinkling {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/twinkling.png') repeat;
+            animation: move-background 200s linear infinite;
+        }
+
+        @keyframes twinkle {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes move-background {
+            0% { background-position: 0 0; }
+            100% { background-position: -10000px 5000px; }
+        }
+
+        /* Glass Card Effect */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Upload Section */
+        .upload-container {
+            border: 2px dashed var(--glass-border);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-container:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        .upload-label {
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Buttons */
+        .btn-anime {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        }
+
+        .btn-anime:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5);
+        }
+
+        /* Image Preview */
+        .img-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Results Section */
+        .result-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .result-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .result-image {
+            width: 100%;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .result-image:hover {
+            transform: scale(1.05);
+        }
+
+        /* Prediction Items */
+        .prediction-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .prediction-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .main-prediction {
+            background: linear-gradient(45deg, rgba(138, 43, 226, 0.3), rgba(255, 110, 199, 0.3));
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .breed-name {
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+
+        .confidence {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        /* Or Divider */
+        .or-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #ccc;
+        }
+
+        .or-divider::before,
+        .or-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .or-divider::before {
+            margin-right: .5rem;
+        }
+
+        .or-divider::after {
+            margin-left: .5rem;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 5rem 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card {
+            padding: 2rem;
+            text-align: center;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 5rem 0;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--darker-bg);
+            padding: 3rem 0;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Dog Breeds Modal */
+        .breeds-modal .modal-content {
+            background: var(--darker-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .breeds-modal .modal-header {
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .breeds-modal .modal-body {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .breeds-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .breed-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            text-transform: capitalize;
+            transition: all 0.3s ease;
+        }
+        
+        .breed-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .glass-card {
+                margin: 1rem;
+            }
+            
+            .upload-container {
+                padding: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .breeds-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-paw me-2"></i>Dog Breed Identification
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <!-- Background Animation -->
+        <div class="background-animation">
+            <div class="stars"></div>
+            <div class="twinkling"></div>
+        </div>
+
+        <div class="container hero-content">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="hero-title"> Dog Breed Identifier</h1>
+                    <p class="hero-subtitle">Discover your favorite dog breeds with our AI-powered identification tool</p>
+                    
+                    <div class="glass-card p-4 p-md-5">
+                        <!-- Upload Section -->
+                        <div class="upload-section mb-4">
+                            <div class="upload-container">
+                                <input type="file" id="fileInput" accept="image/*" class="d-none">
+                                <label for="fileInput" class="upload-label">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <p class="mt-3">Click to upload a dog image</p>
+                                    <p class="text-muted">or drag and drop</p>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Or Divider -->
+                        <div class="or-divider mb-4">
+                            <span>OR</span>
+                        </div>
+
+                        <!-- Random Dog Button -->
+                        <div class="text-center mb-4">
+                            <button id="randomDogBtn" class="btn btn-anime">
+                                <i class="fas fa-random me-2"></i>Get Random Dog Image
+                            </button>
+                        </div>
+
+                        <!-- Preview Section -->
+                        <div id="previewSection" class="text-center mb-4 d-none">
+                            <img id="previewImage" class="img-preview">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center mb-4">
+                            <button id="predictBtn" class="btn btn-primary btn-lg" disabled>
+                                <i class="fas fa-search me-2"></i>Identify Breed
+                            </button>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div id="resultsSection" class="d-none">
+                            <div class="result-card">
+                                <h3 class="text-center mb-3">Prediction Results</h3>
+                                
+                                <div class="row">
+                                    <!-- Image Preview -->
+                                    <div class="col-md-6 mb-3">
+                                        <div class="result-image-container">
+                                            <img id="resultImage" class="result-image">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Prediction Results -->
+                                    <div class="col-md-6">
+                                        <div class="top-prediction">
+                                            <h4>Top Prediction</h4>
+                                            <div class="prediction-item main-prediction">
+                                                <span class="breed-name" id="topBreed"></span>
+                                                <span class="confidence" id="topConfidence"></span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="other-predictions mt-4">
+                                            <h5>Other Possibilities</h5>
+                                            <div id="otherPredictions"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Loading Animation -->
+                        <div id="loading" class="text-center d-none">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Analyzing image...</p>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div id="errorMessage" class="alert alert-danger d-none" role="alert"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="features-section">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center">
+                    <h2 class="mb-4">How It Works</h2>
+                    <p class="lead">Our AI-powered tool makes it easy to Identify dog breeds in just a few simple steps</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <h4>Upload Image</h4>
+                        <p>Upload an image of a dog character or use our random image generator</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>AI Analysis</h4>
+                        <p>Our advanced neural network analyzes the image to detect breed characteristics</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h4>Get Results</h4>
+                        <p>Receive detailed results with the most likely breeds and confidence percentages</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="about-section">
+        <div class="container">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center">
+                    <h2 class="mb-4">Advanced Features</h2>
+                    <p class="lead">Tool offers cutting-edge capabilities for dog breed identification</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="glass-card p-4 h-100">
+                        <h3 class="mb-4">High Accuracy (90+%)</h3>
+                        <p>AI model has been trained on thousands dog images to provide the most accurate breed identification possible with over 90% accuracy.</p>
+                        <p>The neural network recognizes even subtle breed characteristics in art styles.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="glass-card p-4 h-100">
+                        <h3 class="mb-4">Comprehensive Database</h3>
+                        <p>Maintain an extensive database of dog breeds from popular series and movies, capable of identifying up to 120 different dog breeds.</p>
+                        <p>Trained on 20,581 images from the <a href="https://www.kaggle.com/c/dog-breed-identification/data" target="_blank">Kaggle Dog Breed Identification dataset</a>.</p>
+                        
+                        <button id="showBreedsBtn" class="btn btn-anime mt-3" data-bs-toggle="modal" data-bs-target="#breedsModal">
+                            <i class="fas fa-list me-2"></i>View All 120 Dog Breeds
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="features-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="mb-4">About Dog Breed Identification</h2>
+                    <p class="lead">Created by <a href="https://ss-2005.github.io/Sahil-Shaikh-Portfolio/">Sahil Shaikh</a> - CSE-AIML Student.</p>
+                    <p>Mission is to help learn more about the dogs they see in their favorite shows while showcasing the power of modern machine learning technology.</p>
+                    <div class="mt-5">
+                        <a href="#home" class="btn btn-anime pulse">
+                            <i class="fas fa-star me-2"></i>Try It Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>Dog Breed ID</h4>
+                    <p>The ultimate tool for identifying dog breeds</p>
+                </div>
+                <div class="col-lg-6 text-lg-end">
+                    <p>&copy; Dog Identification Project. All rights reserved.<br>
+                        SS-2005 (Sahil Shaikh)
+                    </p>
+                    <div class="mt-3">
+                        <a href="https://github.com/SS-2005/" class="text-light me-3"><i class="fab fa-github fa-lg"></i></a>
+                        <a href="https://ss-2005.github.io/Sahil-Shaikh-Portfolio/" class="text-light"><i class="fas fa-user fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dog Breeds Modal -->
+    <div class="modal fade breeds-modal" id="breedsModal" tabindex="-1" aria-labelledby="breedsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="breedsModalLabel">120 Dog Breeds We Can Identify</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="breeds-container" id="breedsList">
+                        <!-- Dog breeds will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const uploadLabel = document.querySelector('.upload-label');
+        const previewSection = document.getElementById('previewSection');
+        const previewImage = document.getElementById('previewImage');
+        const predictBtn = document.getElementById('predictBtn');
+        const randomDogBtn = document.getElementById('randomDogBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
+        const topBreed = document.getElementById('topBreed');
+        const topConfidence = document.getElementById('topConfidence');
+        const otherPredictions = document.getElementById('otherPredictions');
+        const resultImage = document.getElementById('resultImage');
+        const breedsList = document.getElementById('breedsList');
+
+        let currentImage = null;
+        let currentImageType = null; // 'file' or 'url'
+
+        // List of 120 dog breeds
+        const dogBreeds = [
+            "affenpinscher", "afghan_hound", "african_hunting_dog", "airedale", 
+            "american_staffordshire_terrier", "appenzeller", "australian_terrier", 
+            "basenji", "basset", "beagle", "bedlington_terrier", "bernese_mountain_dog", 
+            "black-and-tan_coonhound", "blenheim_spaniel", "bloodhound", "bluetick", 
+            "border_collie", "border_terrier", "borzoi", "boston_bull", 
+            "bouvier_des_flandres", "boxer", "brabancon_griffon", "briard", 
+            "brittany_spaniel", "bull_mastiff", "cairn", "cardigan", 
+            "chesapeake_bay_retriever", "chihuahua", "chow", "clumber", 
+            "cocker_spaniel", "collie", "curly-coated_retriever", "dandie_dinmont", 
+            "dhole", "dingo", "doberman", "english_foxhound", 
+            "english_setter", "english_springer", "entlebucher", "eskimo_dog", 
+            "flat-coated_retriever", "french_bulldog", "german_shepherd", 
+            "german_short-haired_pointer", "giant_schnauzer", "golden_retriever", 
+            "gordon_setter", "great_dane", "great_pyrenees", "greater_swiss_mountain_dog", 
+            "groenendael", "ibizan_hound", "irish_setter", "irish_terrier", 
+            "irish_water_spaniel", "irish_wolfhound", "italian_greyhound", 
+            "japanese_spaniel", "keeshond", "kelpie", "kerry_blue_terrier", 
+            "komondor", "kuvasz", "labrador_retriever", "lakeland_terrier", 
+            "leonberg", "lhasa", "malamute", "malinois", "maltese_dog", 
+            "mexican_hairless", "miniature_pinscher", "miniature_poodle", 
+            "miniature_schnauzer", "newfoundland", "norfolk_terrier", 
+            "norwegian_elkhound", "norwich_terrier", "old_english_sheepdog", 
+            "otterhound", "papillon", "pekinese", "pembroke", "pomeranian", 
+            "pug", "redbone", "rhodesian_ridgeback", "rottweiler", "saint_bernard", 
+            "saluki", "samoyed", "schipperke", "scotch_terrier", "scottish_deerhound", 
+            "sealyham_terrier", "shetland_sheepdog", "shih-tzu", "siberian_husky", 
+            "silky_terrier", "soft-coated_wheaten_terrier", "staffordshire_bullterrier", 
+            "standard_poodle", "standard_schnauzer", "sussex_spaniel", "tibetan_mastiff", 
+            "tibetan_terrier", "toy_poodle", "toy_terrier", "vizsla", "walker_hound", 
+            "weimaraner", "welsh_springer_spaniel", "west_highland_white_terrier", 
+            "whippet", "wire-haired_fox_terrier", "yorkshire_terrier"
+        ];
+
+        // Populate breeds list when modal is shown
+        document.getElementById('breedsModal').addEventListener('show.bs.modal', function () {
+            populateBreedsList();
+        });
+
+        // Populate breeds list
+        function populateBreedsList() {
+            breedsList.innerHTML = '';
+            dogBreeds.forEach(breed => {
+                const breedItem = document.createElement('div');
+                breedItem.className = 'breed-item';
+                breedItem.textContent = breed.replace(/_/g, ' ');
+                breedsList.appendChild(breedItem);
+            });
+        }
+
+        // File upload handling
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewSection.classList.remove('d-none');
+                    predictBtn.disabled = false;
+                    currentImage = file;
+                    currentImageType = 'file';
+                    hideResults();
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Drag and drop functionality
+        uploadLabel.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('bg-dark');
+        });
+
+        uploadLabel.addEventListener('dragleave', function() {
+            this.classList.remove('bg-dark');
+        });
+
+        uploadLabel.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('bg-dark');
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                const event = new Event('change');
+                fileInput.dispatchEvent(event);
+            }
+        });
+
+        // Random dog image
+        randomDogBtn.addEventListener('click', function() {
+            loading.classList.remove('d-none');
+            hideResults();
+            
+            // Call the backend API to get a random dog image
+            fetch('/random_dog')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showError(data.error);
+                    } else {
+                        previewImage.src = data.url;
+                        previewSection.classList.remove('d-none');
+                        predictBtn.disabled = false;
+                        currentImage = data.url;
+                        currentImageType = 'url';
+                    }
+                    loading.classList.add('d-none');
+                })
+                .catch(error => {
+                    showError('Failed to fetch random dog image');
+                    loading.classList.add('d-none');
+                });
+        });
+
+        // Predict breed
+        predictBtn.addEventListener('click', function() {
+            if (!currentImage) return;
+            
+            loading.classList.remove('d-none');
+            hideResults();
+            
+            // Create form data
+            const formData = new FormData();
+            
+            if (currentImageType === 'file') {
+                formData.append('file', currentImage);
+            } else if (currentImageType === 'url') {
+                formData.append('url', currentImage);
+            }
+            
+            // Call the backend API to predict breed
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showError(data.error);
+                } else {
+                    displayResults(data);
+                }
+                loading.classList.add('d-none');
+            })
+            .catch(error => {
+                showError('Prediction failed. Please try again.');
+                loading.classList.add('d-none');
+            });
+        });
+
+        // Display results
+        function displayResults(data) {
+            // Set top prediction
+            topBreed.textContent = data.breed;
+            topConfidence.textContent = `${data.confidence}%`;
+            
+            // Set image from base64 data
+            resultImage.src = `data:image/jpeg;base64,${data.image}`;
+            
+            // Set other predictions
+            otherPredictions.innerHTML = '';
+            data.top_predictions.forEach((prediction, index) => {
+                if (index > 0) { // Skip the first one as it's the top prediction
+                    const div = document.createElement('div');
+                    div.className = 'prediction-item fade-in';
+                    div.style.animationDelay = `${index * 0.1}s`;
+                    div.innerHTML = `
+                        <span class="breed-name">${prediction.breed}</span>
+                        <span class="confidence">${prediction.confidence.toFixed(2)}%</span>
+                    `;
+                    otherPredictions.appendChild(div);
+                }
+            });
+            
+            // Show results section
+            resultsSection.classList.remove('d-none');
+            
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('d-none');
+            
+            // Hide error after 5 seconds
+            setTimeout(() => {
+                errorMessage.classList.add('d-none');
+            }, 5000);
+        }
+
+        // Hide results
+        function hideResults() {
+            resultsSection.classList.add('d-none');
+            errorMessage.classList.add('d-none');
+        }
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    // Update active nav link
+                    document.querySelectorAll('a.nav-link').forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Scroll to target
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 76, // Account for fixed navbar
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Update active nav link on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('a.nav-link');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
