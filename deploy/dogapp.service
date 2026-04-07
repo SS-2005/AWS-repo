@@ -1,0 +1,15 @@
+[Unit]
+Description=Dog Identification Flask App
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/dog-app
+Environment="PATH=/home/ubuntu/dog-app/.venv/bin"
+ExecStart=/home/ubuntu/dog-app/.venv/bin/gunicorn app:app --bind 0.0.0.0:5000 --workers 1 --threads 2 --timeout 180
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
